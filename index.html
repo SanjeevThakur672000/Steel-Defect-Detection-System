@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Defect Classification</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <div id="alert-box" class="alert-box">
+      <div class="alert-content">
+        <p>Choose a file</p>
+      </div>
+    </div>
+    <nav class="navbar">
+      <ul>
+        <li><a href="./">Home</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </nav>
+    <div class="background-image"></div>
+    <div class="container">
+      <div class="heading"><h1>Steel Defect Classification</h1></div>
+      <div class="forms">
+        <form action="/predict" method="post" enctype="multipart/form-data">
+          <div class="file-preview">
+            <img id="preview-img" src="../static/drop.svg" alt="" />
+            <h2 id="preview-text">Choose file to Predict</h2>
+          </div>
+          <input
+            type="file"
+            name="file"
+            id="file"
+            class="inputfile"
+            accept="image/*"
+            required
+          />
+          <label for="file">Choose file</label>
+          <button type="submit">Predict</button>
+        </form>
+        <div class="predict">
+          {% if prediction %}
+          <h2>Predicted Class: {{ prediction }}</h2>
+          <h3>Defect Name: {{ defect_name }}</h3>
+          <!--<img src="{{ image }}" alt="Uploaded Image">-->
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <footer>
+      This is the footer with relevant information.
+    </footer>
+    <script>
+      const fileInput = document.getElementById("file");
+      const previewImg = document.getElementById("preview-img");
+      const previewText = document.getElementById("preview-text");
+
+      fileInput.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function () {
+            previewImg.src = reader.result;
+            previewImg.style.display = "block";
+            previewText.style.display = "none";
+          };
+          reader.readAsDataURL(file);
+        } else {
+          previewImg.src = "../static/drop.svg";
+          previewImg.style.display = "inline";
+          previewText.style.display = "inline";
+        }
+      });
+
+
+const submitButton = document.querySelector('button[type="submit"]');
+const alertBox = document.getElementById("alert-box");
+const closeBtn = document.getElementsByClassName("close-btn")[0];
+
+submitButton.addEventListener("click", function (event) {
+  if (fileInput.value === "") {
+    event.preventDefault(); // prevent form submission
+    alertBox.style.display = "block";
+  }
+});
+
+
+
+window.onclick = function (event) {
+  if (event.target === alertBox) {
+    alertBox.style.display = "none";
+  }
+};
+    </script>
+  </body>
+</html>
